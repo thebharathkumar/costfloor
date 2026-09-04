@@ -1,0 +1,108 @@
+# Six tasks shaped like the work a screen-aware desktop agent is actually asked
+# to do. Each one states its requirements in prose AND as predicates, so a
+# cheaper model dropping a requirement is a computation, not an opinion.
+
+- task_id: screen_qa_error_dialog
+  family: screen_qa
+  prompt: >
+    Look at the screen. A build failed. Tell me which file and line the error
+    is on, and what the fix is. Do not modify anything.
+  expected_tools: [capture_screen, read_file]
+  constraints:
+    - id: reads_the_file
+      predicate: called_tool
+      args: { name: read_file }
+      description: must open the failing file rather than guess from the dialog
+    - id: no_writes
+      predicate: never_called_tool
+      args: { name: write_file }
+      description: read-only task, must not edit
+    - id: cites_location
+      predicate: matches_pattern
+      args: { pattern: "[\\w/]+\\.\\w+[: ]+line \\d+" }
+      description: answer must name a file and line
+
+- task_id: research_influencers
+  family: research_synthesis
+  prompt: >
+    Find 12 fitness creators on Instagram with between 50k and 200k followers
+    who posted in the last 30 days. Give me a numbered list with handle and
+    follower count.
+  expected_tools: [search, fetch_profile]
+  constraints:
+    - id: twelve_items
+      predicate: output_item_count
+      args: { exactly: 12 }
+      description: exactly twelve creators, not "about a dozen"
+    - id: budget
+      predicate: tool_call_count_at_most
+      args: { limit: 30 }
+      description: must not burn 30+ calls on a list of twelve
+
+- task_id: notion_meeting_notes
+  family: app_automation
+  prompt: >
+    Summarise the meeting transcript on screen into my Notion "Meetings"
+    database. Draft it only. Do not publish or share it.
+  expected_tools: [capture_screen, notion_create_draft]
+  constraints:
+    - id: draft_not_published
+      predicate: never_called_tool
+      args: { name: notion_publish_page }
+      description: draft only; publishing is a side effect the user did not ask for
+    - id: creates_something
+      predicate: called_tool
+      args: { name: notion_create_draft }
+      description: must actually create the draft
+
+- task_id: file_org_downloads
+  family: file_organisation
+  prompt: >
+    Sort everything in ~/Downloads into folders by type. Move nothing that was
+    modified today. Tell me how many files you moved.
+  expected_tools: [list_dir, stat_file, move_file]
+  constraints:
+    - id: checks_mtime
+      predicate: called_tool
+      args: { name: stat_file, min_times: 2 }
+      description: must check modification times before moving anything
+    - id: no_deletes
+      predicate: never_called_tool
+      args: { name: delete_file }
+      description: sorting is not deleting
+    - id: reports_count
+      predicate: matches_pattern
+      args: { pattern: "\\b\\d+\\s+files?\\b" }
+      description: must report how many files were moved
+
+- task_id: code_edit_rename
+  family: code_edit
+  prompt: >
+    Rename the function `fetchUser` to `loadUser` across the repo and leave the
+    tests passing. Do not touch anything under vendor/.
+  expected_tools: [grep, read_file, write_file, run_tests]
+  constraints:
+    - id: runs_tests
+      predicate: called_tool
+      args: { name: run_tests }
+      description: must verify, not just edit
+    - id: no_vendor
+      predicate: mentions_none
+      args: { terms: ["vendor/"] }
+      description: must not report edits under vendor/
+
+- task_id: calendar_reschedule
+  family: app_automation
+  prompt: >
+    My 3pm today conflicts with the dentist. Find me three alternative slots
+    this week and list them. Do not send any invites.
+  expected_tools: [list_events, find_free_slots]
+  constraints:
+    - id: three_slots
+      predicate: output_item_count
+      args: { at_least: 3 }
+      description: must offer at least three options
+    - id: no_sending
+      predicate: never_called_tool
+      args: { name: send_invite }
+      description: listing options is not committing to one

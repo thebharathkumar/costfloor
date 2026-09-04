@@ -1,0 +1,20 @@
+# Rate card. Nothing in this repo ships with real prices, on purpose: provider
+# pricing changes, varies by account and region, and a number baked into a repo
+# is stale the week after it is written. Fill this in from your own billing
+# page, keep `source` and `as_of` accurate, and the report will cite them.
+source: "FILL ME IN -- e.g. https://<provider>/pricing, retrieved by <you>"
+as_of: "FILL ME IN -- e.g. 2026-09-04"
+rates:
+  tier_a_frontier:
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
+    cached_input_per_mtok: 0.0
+  tier_b_mid:
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
+  tier_c_small:
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
+  tier_d_tiny:
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
