@@ -1,3 +1,5 @@
+![ci](https://github.com/thebharathkumar/costfloor/actions/workflows/ci.yml/badge.svg)
+
 # costfloor
 
 **Find the cheapest model that does not silently break your agent.**
