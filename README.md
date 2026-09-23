@@ -4,6 +4,13 @@
 
 **Find the cheapest model that does not silently break your agent.**
 
+<!-- brag:start -->
+<p align="center">
+  <a href="https://github.com/thebharathkumar/costfloor/blob/HEAD/docs/brag/costfloor.mp4"><img src="https://raw.githubusercontent.com/thebharathkumar/costfloor/HEAD/docs/brag/costfloor.gif" alt="costfloor: 14-second technical brief" width="100%"></a>
+</p>
+<p align="center"><sub>14-second technical brief. <a href="https://github.com/thebharathkumar/costfloor/blob/HEAD/docs/brag/costfloor.mp4">Full MP4 with sound</a> &middot; more at <a href="https://thebharath.co">thebharath.co</a></sub></p>
+<!-- brag:end -->
+
 A desktop agent is an economics problem before it is an AI problem. Every task
 a user fires off costs real money, so every product built on one ends up
 rationing: *150 agent messages a month*. The obvious lever is to route cheap
